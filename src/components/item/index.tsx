@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import throttle from 'lodash.throttle';
-import { getScale, getOuterStyles, getRotation } from './helpers';
+import { getScale, getOuterStyles, getRotation, getEventCoordinates, EventType } from './helpers';
 import { InnerContainer, OuterContainer, ItemContainer } from './styles';
 import Controls from './controls';
 
@@ -38,26 +38,22 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
     y: 0,
   });
 
-  const onDragMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setDragStartPosition({ x: event.clientX, y: event.clientY });
+  const onDragMouseDown = (event: EventType) => {
+    setDragStartPosition(getEventCoordinates(event));
     setIsDragging(true);
   };
 
-  const onScaleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, top: boolean, left: boolean) => {
+  const onScaleMouseDown = (event: EventType, top: boolean, left: boolean) => {
     setScaleStartPosition({
-      x: event.clientX,
-      y: event.clientY,
+      ...getEventCoordinates(event),
       top,
       left,
     });
     setIsScaling(true);
   };
 
-  const onRotateMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    setRotationStartPosition({
-      x: event.clientX,
-      y: event.clientY,
-    });
+  const onRotateMouseDown = (event: EventType) => {
+    setRotationStartPosition(getEventCoordinates(event));
     setIsRotating(true);
   };
 
@@ -69,31 +65,42 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
     };
 
     document.addEventListener('mouseup', onMouseUp);
+    document.addEventListener('touchend', onMouseUp);
 
-    return () => document.addEventListener('mouseup', onMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', onMouseUp);
+      document.removeEventListener('touchend', onMouseUp);
+    }
   }, []);
 
   useEffect(() => {
-    const onDrag = throttle((event: MouseEvent) => {
-      setPositionX(positionX + event.clientX - dragStartPosition.x);
-      setPositionY(positionY + event.clientY - dragStartPosition.y);
+    const onDrag = throttle((event: EventType) => {
+      setPositionX(positionX + getEventCoordinates(event).x - dragStartPosition.x);
+      setPositionY(positionY + getEventCoordinates(event).y - dragStartPosition.y);
     }, 10);
 
     if (isDragging) {
       document.addEventListener('mousemove', onDrag);
+      document.addEventListener('touchmove', onDrag);
     } else {
       document.removeEventListener('mousemove', onDrag);
+      document.removeEventListener('touchmove', onDrag);
     }
 
-    return () => document.removeEventListener('mousemove', onDrag);
+    return () => {
+      document.removeEventListener('mousemove', onDrag);
+      document.removeEventListener('touchmove', onDrag);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging, dragStartPosition]);
 
   useEffect(() => {
-    const onScale = throttle((event: MouseEvent) => {
+    const onScale = throttle((event: EventType) => {
       if (itemRef.current) {
-        const scaleX = getScale(scale.x, event.clientX - scaleStartPosition.x, width, scaleStartPosition.left);
-        const scaleY = getScale(scale.y, event.clientY - scaleStartPosition.y, height, scaleStartPosition.top);
+        const eventX = getEventCoordinates(event).x
+        const eventY = getEventCoordinates(event).y
+        const scaleX = getScale(scale.x, eventX - scaleStartPosition.x, width, scaleStartPosition.left);
+        const scaleY = getScale(scale.y, eventY - scaleStartPosition.y, height, scaleStartPosition.top);
         const isMinWidth = scaleX * width < minSize;
         const isMinHeight = scaleY * height < minSize;
 
@@ -103,36 +110,46 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
         });
 
         if (!isMinWidth) {
-          setPositionX(scaleStartPosition.left ? event.clientX : positionX);
+          setPositionX(scaleStartPosition.left ? eventX : positionX);
         }
         if (!isMinHeight) {
-          setPositionY(scaleStartPosition.top ? event.clientY : positionY);
+          setPositionY(scaleStartPosition.top ? eventY : positionY);
         }
       }
     }, 10);
 
     if (isScaling) {
       document.addEventListener('mousemove', onScale);
+      document.addEventListener('touchmove', onScale);
     } else {
       document.removeEventListener('mousemove', onScale);
+      document.removeEventListener('touchmove', onScale);
     }
 
-    return () => document.removeEventListener('mousemove', onScale);
+    return () => {
+      document.removeEventListener('mousemove', onScale);
+      document.removeEventListener('touchmove', onScale);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScaling, scaleStartPosition, width, height]);
 
   useEffect(() => {
-    const onRotate = throttle((event: any) => {
-      setRotation(getRotation(rotationStartPosition.x, rotationStartPosition.y, event.clientX, event.clientY));
+    const onRotate = throttle((event: EventType) => {
+      setRotation(getRotation(rotationStartPosition.x, rotationStartPosition.y, getEventCoordinates(event).x, getEventCoordinates(event).y));
     }, 10);
 
     if (isRotating) {
       document.addEventListener('mousemove', onRotate);
+      document.addEventListener('touchmove', onRotate);
     } else {
       document.removeEventListener('mousemove', onRotate);
+      document.removeEventListener('touchmove', onRotate);
     }
 
-    return () => document.removeEventListener('mousemove', onRotate);
+    return () => {
+      document.removeEventListener('mousemove', onRotate);
+      document.removeEventListener('touchmove', onRotate);
+    }
   }, [isRotating, rotationStartPosition]);
 
   return (
@@ -158,7 +175,7 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
         }}
         showOutline={!itemRef.current}
       >
-        <ItemContainer onMouseDown={onDragMouseDown}>
+        <ItemContainer onMouseDown={onDragMouseDown} onTouchStart={onDragMouseDown} >
           {React.cloneElement(children, {
             draggable: false,
             onClick: (event: MouseEvent) => {

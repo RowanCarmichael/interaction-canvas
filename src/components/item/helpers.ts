@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const getScale = (currentScale: number, delta: number, size: number, inverse: boolean) => {
   return currentScale + (delta / size) * (inverse ? -1 : 1);
 };
@@ -31,3 +33,9 @@ export const getOuterStyles = ({
   height: itemExists ? height * scaleY : 0,
   transformOrigin: itemExists ? `${(width * scaleX) / 2}px ${(height * scaleY) / 2}px` : 'center',
 });
+
+export type EventType = React.MouseEvent<HTMLDivElement, MouseEvent> | MouseEvent | React.TouchEvent<HTMLDivElement> | TouchEvent
+
+export const getEventCoordinates = (event: EventType) => (
+  'touches' in event ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : { x: event.clientX, y: event.clientY }
+)
