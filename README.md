@@ -1,11 +1,12 @@
 # interaction-canvas
 
-A simple React application to try out basic canvas manipulation (drag / scale / rotate) of items. Check out the [Demo](https://RowanCarmichael.github.io/interaction-canvas/) here!
+Check out the [DEMO](https://RowanCarmichael.github.io/interaction-canvas/) here!
+A simple React application to try out basic canvas manipulation (drag / scale / rotate) of items.
 Built using React, TypeScript and StyledComponents
 
 ### Use
 
-Wrap any component/HTML element in the <code><Item></code> component. Any number of <code><Item></code> components can be wrapped by a <code><Canvas></code>
+Wrap any component/HTML element in the <code>Item</code> component. Any number of <code>Item</code> components can be wrapped by a <code>Canvas</code>
 
 ```js
 <Canvas>
@@ -30,4 +31,4 @@ Wrap any component/HTML element in the <code><Item></code> component. Any number
 ### Item PropTypes
 
 - **children** (array of React Elements) - any children (required)
-- **defaultPosition** (<code>{ x: number, y: number }</code>) - relative starting position of the item (optional - default value is <code>{ x: 0, y: 0 }</code>)
+- **defaultPosition** (object <code>{ x: number, y: number }</code>) - relative starting position of the item (optional - default value is <code>{ x: 0, y: 0 }</code>)
