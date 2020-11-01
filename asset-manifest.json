@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/interaction-canvas/static/css/main.6dea0f05.chunk.css",
+    "main.js": "/interaction-canvas/static/js/main.1265dec9.chunk.js",
+    "main.js.map": "/interaction-canvas/static/js/main.1265dec9.chunk.js.map",
+    "runtime-main.js": "/interaction-canvas/static/js/runtime-main.47a518ca.js",
+    "runtime-main.js.map": "/interaction-canvas/static/js/runtime-main.47a518ca.js.map",
+    "static/js/2.ac518e81.chunk.js": "/interaction-canvas/static/js/2.ac518e81.chunk.js",
+    "static/js/2.ac518e81.chunk.js.map": "/interaction-canvas/static/js/2.ac518e81.chunk.js.map",
+    "static/js/3.0392d937.chunk.js": "/interaction-canvas/static/js/3.0392d937.chunk.js",
+    "static/js/3.0392d937.chunk.js.map": "/interaction-canvas/static/js/3.0392d937.chunk.js.map",
+    "index.html": "/interaction-canvas/index.html",
+    "static/css/main.6dea0f05.chunk.css.map": "/interaction-canvas/static/css/main.6dea0f05.chunk.css.map",
+    "static/js/2.ac518e81.chunk.js.LICENSE.txt": "/interaction-canvas/static/js/2.ac518e81.chunk.js.LICENSE.txt",
+    "static/media/logo.6c1d44b8.svg": "/interaction-canvas/static/media/logo.6c1d44b8.svg",
+    "static/media/loop.2aa6c7dc.svg": "/interaction-canvas/static/media/loop.2aa6c7dc.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.47a518ca.js",
+    "static/js/2.ac518e81.chunk.js",
+    "static/css/main.6dea0f05.chunk.css",
+    "static/js/main.1265dec9.chunk.js"
+  ]
+}
