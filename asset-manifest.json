@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/interaction-canvas/static/css/main.6b1b86df.chunk.css",
+    "main.css": "/interaction-canvas/static/css/main.6303516a.chunk.css",
     "main.js": "/interaction-canvas/static/js/main.36ba4ef9.chunk.js",
     "main.js.map": "/interaction-canvas/static/js/main.36ba4ef9.chunk.js.map",
     "runtime-main.js": "/interaction-canvas/static/js/runtime-main.27a29719.js",
@@ -10,7 +10,7 @@
     "static/js/3.a0958212.chunk.js": "/interaction-canvas/static/js/3.a0958212.chunk.js",
     "static/js/3.a0958212.chunk.js.map": "/interaction-canvas/static/js/3.a0958212.chunk.js.map",
     "index.html": "/interaction-canvas/index.html",
-    "static/css/main.6b1b86df.chunk.css.map": "/interaction-canvas/static/css/main.6b1b86df.chunk.css.map",
+    "static/css/main.6303516a.chunk.css.map": "/interaction-canvas/static/css/main.6303516a.chunk.css.map",
     "static/js/2.63c0d087.chunk.js.LICENSE.txt": "/interaction-canvas/static/js/2.63c0d087.chunk.js.LICENSE.txt",
     "static/media/logo.6c1d44b8.svg": "/interaction-canvas/static/media/logo.6c1d44b8.svg",
     "static/media/loop.2aa6c7dc.svg": "/interaction-canvas/static/media/loop.2aa6c7dc.svg"
@@ -18,7 +18,7 @@
   "entrypoints": [
     "static/js/runtime-main.27a29719.js",
     "static/js/2.63c0d087.chunk.js",
-    "static/css/main.6b1b86df.chunk.css",
+    "static/css/main.6303516a.chunk.css",
     "static/js/main.36ba4ef9.chunk.js"
   ]
 }
