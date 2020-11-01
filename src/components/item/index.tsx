@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import throttle from 'lodash.throttle';
 import { getScale, getOuterStyles, getRotation, getEventCoordinates, EventType } from './helpers';
 import { InnerContainer, OuterContainer, ItemContainer } from './styles';
 import Controls from './controls';
@@ -74,10 +73,10 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
   }, []);
 
   useEffect(() => {
-    const onDrag = throttle((event: EventType) => {
+    const onDrag = (event: EventType) => {
       setPositionX(positionX + getEventCoordinates(event).x - dragStartPosition.x);
       setPositionY(positionY + getEventCoordinates(event).y - dragStartPosition.y);
-    }, 10);
+    };
 
     if (isDragging) {
       document.addEventListener('mousemove', onDrag);
@@ -95,7 +94,7 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
   }, [isDragging, dragStartPosition]);
 
   useEffect(() => {
-    const onScale = throttle((event: EventType) => {
+    const onScale = (event: EventType) => {
       if (itemRef.current) {
         const eventX = getEventCoordinates(event).x
         const eventY = getEventCoordinates(event).y
@@ -116,7 +115,7 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
           setPositionY(scaleStartPosition.top ? eventY : positionY);
         }
       }
-    }, 10);
+    };
 
     if (isScaling) {
       document.addEventListener('mousemove', onScale);
@@ -134,9 +133,9 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
   }, [isScaling, scaleStartPosition, width, height]);
 
   useEffect(() => {
-    const onRotate = throttle((event: EventType) => {
+    const onRotate = (event: EventType) => {
       setRotation(getRotation(rotationStartPosition.x, rotationStartPosition.y, getEventCoordinates(event).x, getEventCoordinates(event).y));
-    }, 10);
+    };
 
     if (isRotating) {
       document.addEventListener('mousemove', onRotate);
