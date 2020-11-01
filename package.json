@@ -1,7 +1,10 @@
 {
   "name": "interaction-canvas",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
+  "repository": "https://github.com/RowanCarmichael/interaction-canvas.git",
+  "homepage": "https://RowanCarmichael.github.io/interaction-canvas",
+  "author": "Rowan Carmichael <carmichaelr@hotmail.co.uk>",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
