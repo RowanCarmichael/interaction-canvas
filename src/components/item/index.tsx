@@ -4,12 +4,12 @@ import {
   getOuterStyles,
   getRotation,
   getEventCoordinates,
-  EventType,
   getScalePositionX,
   getScalePositionY,
 } from './helpers';
 import { InnerContainer, OuterContainer, ItemContainer } from './styles';
 import Controls from './controls';
+import { EventType } from './types';
 
 export type ItemProps = {
   children: React.ReactElement;

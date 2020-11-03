@@ -1,24 +1,10 @@
-import React from 'react';
+import { EventType, OuterStyleOptionsType, ScaleOptionsType, ScalePositionOptionsType } from './types';
 
 const toRadians = (degree: number) => (degree * Math.PI) / 180;
 const convertX = (x: number, y: number, degree: number) =>
   x * Math.cos(toRadians(degree)) + y * Math.sin(toRadians(degree));
 const convertY = (x: number, y: number, degree: number) =>
   y * Math.cos(toRadians(degree)) - x * Math.sin(toRadians(degree));
-
-type ScaleOptionsType = {
-  currentScaleX: number;
-  currentScaleY: number;
-  width: number;
-  height: number;
-  left: number;
-  top: number;
-  currentX: number;
-  currentY: number;
-  startX: number;
-  startY: number;
-  rotation: number;
-};
 
 export const getScale = ({
   currentScaleX,
@@ -38,16 +24,6 @@ export const getScale = ({
   scaleY:
     currentScaleY + ((convertY(currentX, currentY, rotation) - convertY(startX, startY, rotation)) / height) * -top,
 });
-
-type ScalePositionOptionsType = {
-  currentPosition: number;
-  node: number;
-  currentX: number;
-  currentY: number;
-  startX: number;
-  startY: number;
-  rotation: number;
-};
 
 export const getScalePositionX = ({
   currentPosition,
@@ -84,17 +60,6 @@ export const getScalePositionY = ({
 export const getRotation = (startX: number, startY: number, currentX: number, currentY: number) =>
   (Math.atan2(startY - currentY, startX - currentX) * 180) / Math.PI + 90;
 
-type OuterStyleOptionsType = {
-  itemExists: boolean;
-  positionX: number;
-  positionY: number;
-  rotation: number;
-  width: number;
-  height: number;
-  scaleX: number;
-  scaleY: number;
-};
-
 export const getOuterStyles = ({
   itemExists,
   positionX,
@@ -109,12 +74,6 @@ export const getOuterStyles = ({
   width: itemExists ? width * scaleX : 0,
   height: itemExists ? height * scaleY : 0,
 });
-
-export type EventType =
-  | React.MouseEvent<HTMLDivElement, MouseEvent>
-  | MouseEvent
-  | React.TouchEvent<HTMLDivElement>
-  | TouchEvent;
 
 export const getEventCoordinates = (event: EventType) =>
   'touches' in event
