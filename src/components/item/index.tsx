@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { getScale, getOuterStyles, getRotation, getEventCoordinates, EventType } from './helpers';
+import {
+  getScale,
+  getOuterStyles,
+  getRotation,
+  getEventCoordinates,
+  EventType,
+  getScalePositionX,
+  getScalePositionY,
+} from './helpers';
 import { InnerContainer, OuterContainer, ItemContainer } from './styles';
 import Controls from './controls';
 
@@ -26,8 +34,8 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
   const [scaleStartPosition, setScaleStartPosition] = useState({
     x: 0,
     y: 0,
-    top: true,
-    left: true,
+    top: 1,
+    left: 1,
   });
 
   const [isRotating, setIsRotating] = useState(false);
@@ -45,8 +53,8 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
   const onScaleMouseDown = (event: EventType, top: boolean, left: boolean) => {
     setScaleStartPosition({
       ...getEventCoordinates(event),
-      top,
-      left,
+      top: top ? 1 : -1,
+      left: left ? 1 : -1,
     });
     setIsScaling(true);
   };
@@ -69,7 +77,7 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
     return () => {
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('touchend', onMouseUp);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -89,17 +97,28 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
     return () => {
       document.removeEventListener('mousemove', onDrag);
       document.removeEventListener('touchmove', onDrag);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDragging, dragStartPosition]);
 
   useEffect(() => {
     const onScale = (event: EventType) => {
       if (itemRef.current) {
-        const eventX = getEventCoordinates(event).x
-        const eventY = getEventCoordinates(event).y
-        const scaleX = getScale(scale.x, eventX - scaleStartPosition.x, width, scaleStartPosition.left);
-        const scaleY = getScale(scale.y, eventY - scaleStartPosition.y, height, scaleStartPosition.top);
+        const eventX = getEventCoordinates(event).x;
+        const eventY = getEventCoordinates(event).y;
+        const { scaleX, scaleY } = getScale({
+          currentScaleX: scale.x,
+          currentScaleY: scale.y,
+          width: width,
+          height: height,
+          top: scaleStartPosition.top,
+          left: scaleStartPosition.left,
+          currentX: eventX,
+          currentY: eventY,
+          startX: scaleStartPosition.x,
+          startY: scaleStartPosition.y,
+          rotation,
+        });
         const isMinWidth = scaleX * width < minSize;
         const isMinHeight = scaleY * height < minSize;
 
@@ -109,10 +128,30 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
         });
 
         if (!isMinWidth) {
-          setPositionX(scaleStartPosition.left ? eventX : positionX);
+          setPositionX(
+            getScalePositionX({
+              currentPosition: positionX,
+              node: scaleStartPosition.left,
+              currentX: eventX,
+              currentY: eventY,
+              startX: scaleStartPosition.x,
+              startY: scaleStartPosition.y,
+              rotation,
+            })
+          );
         }
         if (!isMinHeight) {
-          setPositionY(scaleStartPosition.top ? eventY : positionY);
+          setPositionY(
+            getScalePositionY({
+              currentPosition: positionY,
+              node: scaleStartPosition.top,
+              currentX: eventX,
+              currentY: eventY,
+              startX: scaleStartPosition.x,
+              startY: scaleStartPosition.y,
+              rotation,
+            })
+          );
         }
       }
     };
@@ -128,13 +167,20 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
     return () => {
       document.removeEventListener('mousemove', onScale);
       document.removeEventListener('touchmove', onScale);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isScaling, scaleStartPosition, width, height]);
 
   useEffect(() => {
     const onRotate = (event: EventType) => {
-      setRotation(getRotation(rotationStartPosition.x, rotationStartPosition.y, getEventCoordinates(event).x, getEventCoordinates(event).y));
+      setRotation(
+        getRotation(
+          rotationStartPosition.x,
+          rotationStartPosition.y,
+          getEventCoordinates(event).x,
+          getEventCoordinates(event).y
+        )
+      );
     };
 
     if (isRotating) {
@@ -148,7 +194,7 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
     return () => {
       document.removeEventListener('mousemove', onRotate);
       document.removeEventListener('touchmove', onRotate);
-    }
+    };
   }, [isRotating, rotationStartPosition]);
 
   return (
@@ -174,7 +220,7 @@ const Item: React.FC<ItemProps> = ({ children, defaultPosition = { x: 0, y: 0 } 
         }}
         showOutline={!itemRef.current}
       >
-        <ItemContainer onMouseDown={onDragMouseDown} onTouchStart={onDragMouseDown} >
+        <ItemContainer onMouseDown={onDragMouseDown} onTouchStart={onDragMouseDown}>
           {React.cloneElement(children, {
             draggable: false,
             onClick: (event: MouseEvent) => {

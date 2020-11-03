@@ -1,7 +1,84 @@
-import React from 'react'
+import React from 'react';
 
-export const getScale = (currentScale: number, delta: number, size: number, inverse: boolean) => {
-  return currentScale + (delta / size) * (inverse ? -1 : 1);
+const toRadians = (degree: number) => (degree * Math.PI) / 180;
+const convertX = (x: number, y: number, degree: number) =>
+  x * Math.cos(toRadians(degree)) + y * Math.sin(toRadians(degree));
+const convertY = (x: number, y: number, degree: number) =>
+  y * Math.cos(toRadians(degree)) - x * Math.sin(toRadians(degree));
+
+type ScaleOptionsType = {
+  currentScaleX: number;
+  currentScaleY: number;
+  width: number;
+  height: number;
+  left: number;
+  top: number;
+  currentX: number;
+  currentY: number;
+  startX: number;
+  startY: number;
+  rotation: number;
+};
+
+export const getScale = ({
+  currentScaleX,
+  currentScaleY,
+  currentX,
+  currentY,
+  startX,
+  startY,
+  rotation,
+  width,
+  height,
+  left,
+  top,
+}: ScaleOptionsType) => ({
+  scaleX:
+    currentScaleX + ((convertX(currentX, currentY, rotation) - convertX(startX, startY, rotation)) / width) * -left,
+  scaleY:
+    currentScaleY + ((convertY(currentX, currentY, rotation) - convertY(startX, startY, rotation)) / height) * -top,
+});
+
+type ScalePositionOptionsType = {
+  currentPosition: number;
+  node: number;
+  currentX: number;
+  currentY: number;
+  startX: number;
+  startY: number;
+  rotation: number;
+};
+
+export const getScalePositionX = ({
+  currentPosition,
+  node,
+  currentX,
+  currentY,
+  startX,
+  startY,
+  rotation,
+}: ScalePositionOptionsType) => {
+  const deltaX = startX - currentX;
+  const deltaY = startY - currentY;
+  const radians = toRadians(rotation);
+
+  return currentPosition - deltaX * ((Math.cos(radians) + node) / (node * 2)) - (node * Math.sin(radians) * deltaY) / 2;
+};
+
+export const getScalePositionY = ({
+  currentPosition,
+  node,
+  currentX,
+  currentY,
+  startX,
+  startY,
+  rotation,
+}: ScalePositionOptionsType) => {
+  const deltaX = startX - currentX;
+  const deltaY = startY - currentY;
+  const radians = toRadians(rotation);
+
+  return currentPosition + (node * Math.sin(radians) * deltaX) / 2 - deltaY * ((Math.cos(radians) + node) / (node * 2));
 };
 
 export const getRotation = (startX: number, startY: number, currentX: number, currentY: number) =>
@@ -31,11 +108,15 @@ export const getOuterStyles = ({
   transform: `translate(${positionX}px, ${positionY}px) rotate(${rotation}deg)`,
   width: itemExists ? width * scaleX : 0,
   height: itemExists ? height * scaleY : 0,
-  transformOrigin: itemExists ? `${(width * scaleX) / 2}px ${(height * scaleY) / 2}px` : 'center',
 });
 
-export type EventType = React.MouseEvent<HTMLDivElement, MouseEvent> | MouseEvent | React.TouchEvent<HTMLDivElement> | TouchEvent
+export type EventType =
+  | React.MouseEvent<HTMLDivElement, MouseEvent>
+  | MouseEvent
+  | React.TouchEvent<HTMLDivElement>
+  | TouchEvent;
 
-export const getEventCoordinates = (event: EventType) => (
-  'touches' in event ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : { x: event.clientX, y: event.clientY }
-)
+export const getEventCoordinates = (event: EventType) =>
+  'touches' in event
+    ? { x: event.touches[0].clientX, y: event.touches[0].clientY }
+    : { x: event.clientX, y: event.clientY };
