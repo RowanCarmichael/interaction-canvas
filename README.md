@@ -2,7 +2,7 @@
 
 Check out the [DEMO](https://RowanCarmichael.github.io/interaction-canvas/) here!<br />
 A simple React application to try out basic canvas manipulation (drag / scale / rotate) of items.<br />
-Built using React, TypeScript and StyledComponents
+Built entirely using React, TypeScript and StyledComponents
 
 ### Use
 
